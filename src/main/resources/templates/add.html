@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>HouseMob - Imobiliária online</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+	<div class="div-form">
+		<form  id="form" action="">
+			CEP:<input id="cep" type="text" name="cep"/><br /> 
+			Rua:<input id="street" type="text" name="street"/><br />
+			Número:<input id="number" type="text" name="number" /><br />
+			Complemento:<input id="complement" type="text" name="complement"/><br />
+			Bairro:<input id="neighborhood" type="text" name="neighborhood"/><br /> 
+			Cidade:<input id="city" type="text" name="city"/><br />
+			Estado:<input id="state" type="text" name="state" /><br /> 
+			Tipo:<input type="radio" name="type" value="Locação" id="location" />Locação 
+			<input type="radio" name="type" value="Venda" id="sale"  checked/>Venda<br />
+			Valor: <input id="price" type="text" name="price"/><br />
+			Proprietário:<br />	
+			<div class="list-owner">
+				<table id="tabela" border="1">
+					<tr>
+						<th>Nome</th>
+						<th>Cpf</th>
+						<th>Cnpj</th>
+						<th>Selecionar</th>
+					</tr>		
+					<th:block th:each="owner : ${owners}">
+						<tr id="tr">
+							<td id="nome" th:text="${owner.name}"></td>
+							<td id="cpf" th:text="${owner.cpf}"></td>
+							<td id="cnpj" th:text="${owner.cnpj}"></td>
+							<td id="owner-id"><input type="radio" name="owner" th:value="${owner.id}" checked />
+						</tr>
+					</th:block>
+				</table>
+			</div>
+
+		</form>
+		
+		
+		<button id="submit">Salvar</button>
+	</div>
+	<script>
+		$(document).ready(function() {
+			$(document).on("click", "#submit", function() {
+				var validation = true;
+				var numberValidation = document.getElementById("number").value;
+				var priceValidation = document.getElementById("price").value;
+				var cepValidation = document.getElemeentById("cep").value;
+				
+				if(document.getElementById("cep").value == ""){
+					alert('Por favor, preencha o campo cep');
+					document.getElementById("cep").focus();
+					validation = false;
+				}
+				if(document.getElementById("street").value == ""){
+					alert('Por favor, preencha o campo rua');
+					document.getElementById("street").focus();
+					validation = false;
+				}
+				if(document.getElementById("number").value == ""){
+					alert('Por favor, preencha o campo número');
+					document.getElementById("number").focus();
+					validation = false;
+				}
+				
+				if(document.getElementById("complement").value == ""){
+					alert("Por favor, preencha o campo complemento");
+					document.getElementById("complement").focus();
+					validation = false;
+				}
+				if(document.getElementById("neighborhood").value == ""){
+					alert('Por favor, preencha o campo bairro');
+					document.getElementById("neighborhood").focus();
+					validation = false;
+				}
+				if(document.getElementById("city").value == ""){
+					alert('Por favor, preencha o campo cidade');
+					document.getElementById("city").focus();
+					validation = false;
+				}
+				if(document.getElementById("state").value == ""){
+					alert('Por favor, preencha o campo estado');
+					document.getElementById("state").focus();
+					validation = false;
+				}
+				if(document.getElementById("price").value == ""){
+					alert('Por favor, preencha o campo valor');
+					document.getElementById("price").focus();
+					validation = false;
+				}
+				if(cepValidation < 0){
+					alert('Por favor, preencha o campo Cep com um valor válido');
+					document.getElementById("cep").focus();
+					validation = false;
+				}
+				if(numberValidation < 0){
+					alert('Por favor, preencha o campo número com um valor válido');
+					document.getElementById("number").focus();
+					validation = false;
+				}
+				if(priceValidation < 0){
+					alert('Por favor, preencha o campo valor com um valor válido');
+					document.getElementById("price").focus();
+					validation = false;
+				}
+				
+
+				if(validation === true){
+					var radios = document.getElementsByName("type");
+					var value;
+					console.log(radios.length);
+					for (var i = 0; i < radios.length; i++) {
+						if (radios[i].checked) {
+							value = radios[i].value;
+						}
+					}
+					save(value);
+				}
+			});
+			
+			function save(value){
+				var data = $("#form").serialize(); 
+				console.log(data);
+				$.ajax({
+					url: "/add-house",
+					data: data
+				}).done(function(data){
+					$("#list-owner").html(data);
+				});
+			}
+
+		});
+	</script>
+</body>
+</html>

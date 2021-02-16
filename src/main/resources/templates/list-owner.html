@@ -1,0 +1,23 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<body  th:fragment="template">
+	<table id="tabela" border="1">
+		<tr>
+			<th>Id</th>
+			<th>Nome</th>
+			<th>Cpf</th>
+			<th>Alterar</th>
+			<th>Remover</th>
+		</tr>
+		<th:block th:each="owner : ${owners}">
+			<tr id="tr">
+				<td id="nome" th:text="${owner.name}"></td>
+				<td id="cpf" th:text="${owner.cpf}"></td>
+				<td id="cpf" th:text="${owner.cnpj}"></td>
+				<td id="owner-id"><input type="radio" name="radio" value="${ownser.id}" />
+			</tr>
+		</th:block>
+	</table>
+	</body>
+
+</html>
